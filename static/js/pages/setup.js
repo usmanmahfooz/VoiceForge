@@ -1,41 +1,24 @@
+/* Setup Page */
 function initSetupPage() {
-  const page = document.getElementById('setup-page');
-  if (!page || page.dataset.initialized) return;
-  page.dataset.initialized = 'true';
-  page.innerHTML = `<div class="panel"><h2>Welcome to VoiceForge</h2><p>Initialize the speech engine before using the studio. The first model load may take time.</p><button id="startSetup" type="button">Initialize TTS Engine</button><p id="setupStatus" role="status">Waiting to start.</p></div>`;
-  const button = document.getElementById('startSetup');
-  const status = document.getElementById('setupStatus');
-  let pollHandle = null;
-  async function pollStatus() {
+  const progressBar = document.getElementById('setupProgress');
+  const statusText = document.getElementById('setupStatus');
+  if (!progressBar || !statusText) return;
+  fetch('/api/setup-start', { method: 'POST' }).catch(() => {});
+  const poll = setInterval(async () => {
     try {
-      const response = await fetch('/api/setup-status');
-      if (!response.ok) return;
-      const data = await response.json();
-      status.textContent = (data.status || 'Loading model…') + (Number.isFinite(data.progress) && data.progress >= 0 ? ' (' + data.progress + '%)' : '');
+      const res = await fetch('/api/setup-status');
+      const data = await res.json();
+      if (data.progress >= 0) progressBar.style.width = data.progress + '%';
+      statusText.textContent = data.status || 'Loading...';
       if (data.model_loaded) {
-        if (pollHandle) window.clearInterval(pollHandle);
-        pollHandle = null;
-        showToast('TTS engine ready.', 'success');
-        showApp();
+        clearInterval(poll); progressBar.style.width = '100%';
+        statusText.textContent = 'Ready!';
+        setTimeout(() => appReady(), 800);
       }
-      if (data.progress < 0) {
-        if (pollHandle) window.clearInterval(pollHandle);
-        pollHandle = null;
-        button.disabled = false;
+      if (data.progress === -1) {
+        clearInterval(poll); statusText.textContent = data.status || 'Setup failed. Check logs.';
+        statusText.style.color = 'var(--error)';
       }
-    } catch {}
-  }
-  button.addEventListener('click', async () => {
-    button.disabled = true;
-    status.textContent = 'Starting model setup…';
-    try {
-      const response = await fetch('/api/setup-start', {method:'POST'});
-      if (!response.ok) throw new Error('Setup could not be started');
-      await pollStatus();
-      if (!pollHandle) pollHandle = window.setInterval(pollStatus, 2500);
-    } catch (error) {
-      status.textContent = error.message;
-      button.disabled = false;
-    }
-  });
+    } catch { statusText.textContent = 'Connecting to server...'; }
+  }, 1500);
 }
