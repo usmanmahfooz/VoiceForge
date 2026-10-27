@@ -1,37 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#008080">
-  <meta name="description" content="VoiceForge is a local-first AI text-to-speech studio for speech generation, voice management, voice cloning, and batch audio workflows powered by Pocket TTS.">
-  <meta name="keywords" content="VoiceForge, text to speech, TTS, AI voice generator, Pocket TTS, voice cloning, speech synthesis, audio generation">
-  <title>VoiceForge | AI Text-to-Speech Studio</title>
-  <link rel="icon" type="image/svg+xml" href="/static/assets/logo.svg">
-  <link rel="stylesheet" href="/static/css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#008080">
+    <meta name="description" content="VoiceForge is a local AI text-to-speech studio powered by Pocket TTS. Generate audio, explore built-in voices, create authorized voice clones, and process batches through a browser-based interface.">
+    <meta name="keywords" content="VoiceForge, AI text to speech, TTS studio, Pocket TTS, voice cloning, speech synthesis, voice generator, batch audio, FastAPI">
+    <meta property="og:title" content="VoiceForge | AI Text-to-Speech Studio">
+    <meta property="og:description" content="A local-first AI speech studio for text-to-speech generation, voice management, voice cloning workflows, and batch audio processing.">
+    <meta property="og:type" content="website">
+    <title>VoiceForge | AI Text-to-Speech Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=100">
+    <link rel="icon" type="image/svg+xml" href="/static/assets/logo.svg">
 </head>
 <body>
-  <div id="app">
-    <nav id="navbar" class="navbar"></nav>
-    <main class="main-content">
-      <section id="gate-page" class="app-page"></section>
-      <section id="setup-page" class="app-page"></section>
-      <section id="studio-page" class="app-page"></section>
-      <section id="voices-page" class="app-page"></section>
-      <section id="clone-page" class="app-page"></section>
-      <section id="batch-page" class="app-page"></section>
-    </main>
-    <div id="toast-container" class="toast-container" aria-live="polite"></div>
-  </div>
-  <script src="/static/js/components/audio-player.js"></script>
-  <script src="/static/js/components/navbar.js"></script>
-  <script src="/static/js/components/voice-card.js"></script>
-  <script src="/static/js/pages/setup.js"></script>
-  <script src="/static/js/pages/gate.js"></script>
-  <script src="/static/js/pages/studio.js"></script>
-  <script src="/static/js/pages/voices.js"></script>
-  <script src="/static/js/pages/clone.js"></script>
-  <script src="/static/js/pages/batch.js"></script>
-  <script src="/static/js/app.js"></script>
+    <div class="bg-mesh" id="bgMesh"></div>
+
+    <div id="page-setup" class="page" style="display:none;">
+        <div class="setup-container">
+            <div class="setup-logo">
+                <div class="css-logo-container large pulse-glow" style="margin-bottom:16px;"><div class="css-logo"></div></div>
+                <h1 class="gradient-text">VoiceForge</h1>
+            </div>
+            <p class="setup-subtitle">Preparing your AI voice engine...</p>
+            <div class="progress-bar-container"><div class="progress-bar" id="setupProgress"></div></div>
+            <p class="setup-status" id="setupStatus">Initializing...</p>
+            <div class="setup-features">
+                <div class="setup-feature"><span class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></span> Real-time voice synthesis</div>
+                <div class="setup-feature"><span class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg></span> Voice cloning from reference audio (when supported)</div>
+                <div class="setup-feature"><span class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span> Language options exposed by the configured engine</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="page-gate" class="page" style="display:none;">
+        <div class="gate-container">
+            <div class="gate-logo">
+                <div class="css-logo-container medium"><div class="css-logo"></div></div>
+                <h1 class="gradient-text">VoiceForge</h1>
+                <p class="gate-tagline">AI Text-to-Speech Studio</p>
+            </div>
+            <div class="gate-card glass-card">
+                <h2>Community access</h2>
+                <p class="gate-desc">Continue to the VoiceForge local speech studio.</p>
+                <div class="gate-steps">
+                    <div class="gate-step" id="gateStep1">
+                        <div class="step-number">1</div>
+                        <div class="step-content"><h3>Follow project updates</h3><p>Visit the project community page.</p><a href="https://www.facebook.com/profile.php?id=61566987472914" target="_blank" rel="noopener noreferrer" class="btn btn-facebook" id="fbLink">Visit Facebook</a></div>
+                        <div class="step-check" id="fbCheck">✓</div>
+                    </div>
+                    <div class="gate-step" id="gateStep2">
+                        <div class="step-number">2</div>
+                        <div class="step-content"><h3>Join the update channel</h3><p>Get notified about project news.</p><a href="https://whatsapp.com/channel/0029VbCEhweCsU9TjJ34eI1f" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp" id="waLink">Open WhatsApp Channel</a></div>
+                        <div class="step-check" id="waCheck">✓</div>
+                    </div>
+                </div>
+                <button class="btn btn-primary btn-unlock" id="btnUnlock" disabled>Continue to VoiceForge</button>
+            </div>
+            <p class="gate-footer">VoiceForge · Runs locally</p>
+        </div>
+    </div>
+
+    <div id="app-container" style="display:none;">
+        <nav class="navbar glass-nav" id="navbar">
+            <div class="nav-brand"><div class="css-logo-container small"><div class="css-logo"></div></div><span class="nav-title gradient-text">VoiceForge</span></div>
+            <div class="nav-tabs">
+                <button class="nav-tab active" data-page="studio">Studio</button>
+                <button class="nav-tab" data-page="voices">Voices</button>
+                <button class="nav-tab" data-page="clone">Clone</button>
+                <button class="nav-tab" data-page="batch">Batch</button>
+            </div>
+            <div class="nav-badge"><span class="badge-dot"></span> Pocket TTS</div>
+        </nav>
+        <main class="main-content">
+            <div id="page-studio" class="page app-page"></div>
+            <div id="page-voices" class="page app-page" style="display:none;"></div>
+            <div id="page-clone" class="page app-page" style="display:none;"></div>
+            <div id="page-batch" class="page app-page" style="display:none;"></div>
+        </main>
+    </div>
+    <div id="toasts" class="toast-container" aria-live="polite"></div>
+
+    <script src="/static/js/components/audio-player.js?v=100"></script>
+    <script src="/static/js/components/voice-card.js?v=100"></script>
+    <script src="/static/js/components/navbar.js?v=100"></script>
+    <script src="/static/js/pages/setup.js?v=100"></script>
+    <script src="/static/js/pages/gate.js?v=100"></script>
+    <script src="/static/js/pages/studio.js?v=100"></script>
+    <script src="/static/js/pages/voices.js?v=100"></script>
+    <script src="/static/js/pages/clone.js?v=100"></script>
+    <script src="/static/js/pages/batch.js?v=100"></script>
+    <script src="/static/js/app.js?v=100"></script>
 </body>
 </html>
