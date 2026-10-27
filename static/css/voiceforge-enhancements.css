@@ -1,0 +1,110 @@
+/* VoiceForge interface polish and legacy-page support */
+:root {
+  --vf-teal: #008080;
+  --vf-navy: #000080;
+  --vf-silver: #c0c0c0;
+  --vf-white: #ffffff;
+  --vf-black: #111111;
+  --vf-border: #808080;
+}
+.bg-mesh {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 12% 12%, rgba(255,255,255,.09), transparent 30%),
+    radial-gradient(circle at 88% 82%, rgba(0,0,0,.08), transparent 32%);
+}
+.page { min-height: 100vh; }
+.setup-container, .gate-container {
+  width: min(760px, calc(100% - 28px));
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 48px 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 20px;
+}
+.setup-logo, .gate-logo { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 10px; }
+.setup-logo h1, .gate-logo h1 { font-size: clamp(30px, 5vw, 44px); margin: 0; }
+.gradient-text { color: var(--vf-navy); text-shadow: 1px 1px #fff; }
+.css-logo-container { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.css-logo-container.large { width: 76px; height: 76px; }
+.css-logo-container.medium { width: 58px; height: 58px; }
+.css-logo-container.small { width: 28px; height: 28px; }
+.css-logo {
+  width: 100%;
+  height: 100%;
+  border: 3px solid #fff;
+  outline: 2px solid #111;
+  background: linear-gradient(135deg, #000080 0 28%, #c0c0c0 28% 62%, #fff 62%);
+  box-shadow: inset -5px -5px #777, inset 4px 4px #ddd, 3px 3px 0 rgba(0,0,0,.3);
+  position: relative;
+}
+.css-logo::before { content: ""; position: absolute; top: 8%; left: 25%; width: 48%; height: 25%; background: #fff; border: 2px solid #111; }
+.css-logo::after { content: ""; position: absolute; bottom: 10%; left: 23%; width: 54%; height: 27%; background: #000080; border: 2px solid #111; }
+.pulse-glow { filter: drop-shadow(0 0 6px rgba(255,255,255,.35)); }
+.setup-subtitle { font-weight: 700; font-size: 17px; }
+.progress-bar-container {
+  width: min(460px, 100%);
+  height: 24px;
+  padding: 3px;
+  background: #fff;
+  border: 2px inset #ddd;
+}
+.progress-bar {
+  width: 0;
+  height: 100%;
+  background: repeating-linear-gradient(90deg, #000080 0 18px, #1084d0 18px 22px);
+  transition: width .25s ease;
+}
+.setup-status { max-width: 580px; overflow-wrap: anywhere; font-weight: 600; }
+.setup-features { display: grid; gap: 10px; width: min(420px, 100%); text-align: left; }
+.setup-feature { display: flex; align-items: center; gap: 12px; padding: 10px 12px; background: #c0c0c0; border: 2px outset #eee; }
+.feature-icon { display: inline-flex; align-items: center; justify-content: center; color: #000080; }
+.gate-tagline { width: 100%; font-weight: 700; }
+.gate-card { width: min(560px, 100%); padding: 18px; text-align: left; }
+.gate-card h2 { padding: 8px 10px; margin: -18px -18px 16px; color: #fff; background: linear-gradient(90deg,#000080,#1084d0); font-size: 18px; }
+.gate-desc { margin-bottom: 16px; }
+.gate-steps { display: grid; gap: 12px; }
+.gate-step { display: grid; grid-template-columns: 28px minmax(0,1fr) 20px; gap: 12px; align-items: center; padding: 12px; background: #fff; border: 2px inset #ddd; }
+.step-number { width: 26px; height: 26px; display: grid; place-items: center; background: #c0c0c0; border: 2px outset #eee; font-weight: 700; }
+.step-content h3 { font-size: 14px; margin: 0 0 4px; }
+.step-content p { color: #555; margin-bottom: 8px; font-size: 12px; }
+.step-check { opacity: 0; color: #008000; font-weight: 700; }
+.gate-step.done .step-check { opacity: 1; }
+.btn-unlock { width: 100%; margin-top: 16px; padding: 12px; }
+.gate-footer { color: #fff; text-shadow: 1px 1px #000; }
+.nav-badge { display: flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 700; }
+.badge-dot { width: 8px; height: 8px; background: #008000; border: 1px solid #fff; border-radius: 50%; }
+#app-container { min-height: 100vh; }
+#app-container .main-content { padding-top: 56px; }
+#app-container .page.app-page { padding: 16px; max-width: 1260px; margin: 0 auto; }
+#voiceSelector { width: 100%; cursor: pointer; }
+#ttsText { display: block; }
+.panel h2, .panel h3 { margin-bottom: 12px; }
+.panel label { display: block; margin: 10px 0 5px; font-weight: 700; }
+.panel input[type="text"], .panel input[type="search"], .panel input[type="file"], .panel select, .panel textarea {
+  width: 100%; min-width: 0; background: #fff; border: 2px inset #ddd; padding: 8px;
+}
+.panel input[type="range"] { width: 100%; padding: 0; }
+.panel button { margin-top: 10px; }
+.panel textarea { min-height: 180px; resize: vertical; }
+#btnGenerate, #btnBatchGenerate { font-weight: 700; border: 2px outset #eee; background: #d5d5d5; }
+#btnGenerate:disabled, #btnBatchGenerate:disabled { opacity: .65; cursor: wait; }
+#resultSection { margin-top: 18px; }
+.audio-player { margin-top: 10px; }
+.audio-player audio { width: 100%; }
+.studio-sidebar { align-self: start; }
+.history-item { overflow-wrap: anywhere; }
+@media (max-width: 720px) {
+  .setup-container, .gate-container { padding: 28px 10px; }
+  .gate-step { grid-template-columns: 26px minmax(0,1fr); }
+  .gate-step .step-check { display: none; }
+  #app-container .main-content { padding-top: 50px; }
+  #app-container .page.app-page { padding: 10px; }
+}
