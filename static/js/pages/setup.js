@@ -14,11 +14,13 @@ function initSetupPage() {
       status.textContent = (data.status || 'Loading model…') + (Number.isFinite(data.progress) && data.progress >= 0 ? ' (' + data.progress + '%)' : '');
       if (data.model_loaded) {
         if (pollHandle) window.clearInterval(pollHandle);
+        pollHandle = null;
         showToast('TTS engine ready.', 'success');
         showApp();
       }
       if (data.progress < 0) {
         if (pollHandle) window.clearInterval(pollHandle);
+        pollHandle = null;
         button.disabled = false;
       }
     } catch {}
