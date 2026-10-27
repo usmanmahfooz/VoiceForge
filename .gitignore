@@ -1,0 +1,33 @@
+# Python environments and cache
+.venv/
+venv/
+runtime/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+
+# Local app data and generated media
+data/output/*
+data/cloned/*
+data/cloned_voices/*
+data/voices/*
+data/config.json
+output/
+logs/
+*.wav
+*.mp3
+*.webm
+*.safetensors
+
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+*.token
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
