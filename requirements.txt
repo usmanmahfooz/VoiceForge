@@ -4,3 +4,4 @@ python-multipart
 pocket-tts
 soundfile
 numpy
+huggingface_hub
