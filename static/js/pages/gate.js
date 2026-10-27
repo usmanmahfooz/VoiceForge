@@ -1,13 +1,27 @@
+/* Community Gate. This is a convenience flow, not an authentication/security mechanism. */
 function initGatePage() {
-  const page = document.getElementById('gate-page');
-  if (!page || page.dataset.initialized) return;
-  page.dataset.initialized = 'true';
-  page.innerHTML = `<div class="panel"><h2>VoiceForge</h2><p>Continue to the local speech studio.</p><button id="continueVoiceForge" type="button">Continue</button></div>`;
-  document.getElementById('continueVoiceForge').addEventListener('click', async () => {
+  const step1 = document.getElementById('gateStep1');
+  const step2 = document.getElementById('gateStep2');
+  const btnUnlock = document.getElementById('btnUnlock');
+  const fbLink = document.getElementById('fbLink');
+  const waLink = document.getElementById('waLink');
+  if (!step1 || !step2 || !btnUnlock || !fbLink || !waLink) return;
+  let fbDone = false, waDone = false;
+  fbLink.addEventListener('click', () => { setTimeout(() => { fbDone = true; step1.classList.add('done'); checkReady(); }, 2000); });
+  waLink.addEventListener('click', () => { setTimeout(() => { waDone = true; step2.classList.add('done'); checkReady(); }, 2000); });
+  function checkReady() { btnUnlock.disabled = !(fbDone && waDone); }
+  btnUnlock.addEventListener('click', async () => {
+    if (!fbDone || !waDone) return;
+    btnUnlock.textContent = 'Opening VoiceForge…';
+    btnUnlock.disabled = true;
     try {
-      const res = await fetch('/api/verify', {method:'POST'});
-      if (!res.ok) throw new Error('Verification failed');
+      await fetch('/api/verify', { method: 'POST' });
+      localStorage.setItem('vf_verified', 'true');
+      showToast('Welcome to VoiceForge!', 'success');
+      setTimeout(showApp, 500);
+    } catch {
+      localStorage.setItem('vf_verified', 'true');
       showApp();
-    } catch (e) { showToast(e.message, 'error'); }
+    }
   });
 }
